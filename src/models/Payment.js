@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 const paymentSchema = new mongoose.Schema({
@@ -82,6 +81,21 @@ const paymentSchema = new mongoose.Schema({
 
     processedAt: {
         type: Date,
+        default: null
+    },
+
+    networkActivated: {
+        type: Boolean,
+        default: false
+    },
+
+    networkActivatedAt: {
+        type: Date,
+        default: null
+    },
+
+    networkActivationError: {
+        type: String,
         default: null
     }
 

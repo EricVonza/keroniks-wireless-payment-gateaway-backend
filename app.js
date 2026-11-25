@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 
 const express = require('express');
@@ -8,10 +7,35 @@ const connectDB = require('./src/config/database');
 
 const paymentRoutes = require('./src/routes/paymentRoutes');
 const webhookRoutes = require('./src/routes/webhookRoutes');
+const customerRoutes = require('./src/routes/customerRoutes');
+
+const rateLimit = require('express-rate-limit');
+
+const lookupLimiter = rateLimit({ windowMs: 60 * 1000, max: 20 });
+const paymentLimiter = rateLimit({ windowMs: 60 * 1000, max: 5 });
+
+app.use('/api/accounts', lookupLimiter, customerRoutes);
+app.use('/api/payments', paymentLimiter, paymentRoutes);
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+    'http://localhost:8080',
+    process.env.FRONTEND_URL
+].filter(Boolean);
+
+app.use(cors({
+    origin(origin, callback) {
+        // Allow tools such as curl/Postman that do not send an Origin header
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error('Origin not allowed by CORS'));
+    },
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -23,6 +47,8 @@ app.get('/', (req, res) => {
 
 app.use('/api/payments', paymentRoutes);
 app.use('/api/payhero', webhookRoutes);
+app.use('/api/customers', customerRoutes);
+app.use('/api/accounts', customerRoutes);
 
 const PORT = process.env.PORT || 5000;
 

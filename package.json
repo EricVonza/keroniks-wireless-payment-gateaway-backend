@@ -1,7 +1,9 @@
 {
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "seed:customer": "node src/scripts/createTestCustomer.js",
+    "import:accounts": "node src/scripts/importAccounts.js"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"

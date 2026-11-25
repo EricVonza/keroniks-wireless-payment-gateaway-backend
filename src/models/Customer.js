@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 const customerSchema = new mongoose.Schema({
@@ -44,6 +43,23 @@ const customerSchema = new mongoose.Schema({
     ipAddress: {
         type: String,
         default: null
+    },
+
+    renewalAmount: {
+        type: Number,
+        min: 1,
+        default: 150
+    },
+
+    renewalPlanName: {
+        type: String,
+        default: '30-Day Internet'
+    },
+
+    renewalDurationDays: {
+        type: Number,
+        min: 1,
+        default: 30
     },
 
     // Subscription information

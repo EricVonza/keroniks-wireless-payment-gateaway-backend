@@ -4,7 +4,7 @@ const router = express.Router();
 
 const { handlePayheroCallback } = require('../controllers/webhookController');
 
-// PayHero calls this URL after the customer completes or cancels the STK push
-router.post('/callback', handlePayheroCallback);
+// PayHero calls: POST /api/payhero/callback/<PAYHERO_CALLBACK_SECRET>
+router.post('/callback/:secret', handlePayheroCallback);
 
 module.exports = router;
