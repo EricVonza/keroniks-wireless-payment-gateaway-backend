@@ -3,8 +3,6 @@ const { randomUUID } = require('crypto');
 const Payment = require('../models/Payment');
 const Customer = require('../models/Customer');
 const Subscription = require('../models/Subscription');
-
-const { amount: paymentAmount } = await getRenewalDetails(customer);
 const { getRenewalDetails } = require('../services/pricingService');
 
 const normalizePhoneNumber = (phone) => {
