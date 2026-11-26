@@ -104,7 +104,20 @@ const initiatePayment = async (req, res) => {
             paymentId: externalReference // what the frontend polls with
         });
     } catch (error) {
-        console.error('Payment Controller Error:', error.message);
+        const upstream = error.response?.data;
+        console.error('Payment Controller Error:', upstream || error.message);
+
+        // Upstream (PayHero) rejected the request, e.g. insufficient merchant balance
+        if (upstream) {
+            const isBalanceIssue = /insufficient balance/i.test(upstream.error_message || '');
+            return res.status(502).json({
+                success: false,
+                message: isBalanceIssue
+                    ? 'Payments are temporarily unavailable. Please try again later or contact support.'
+                    : 'Payment provider rejected the request. Please try again.'
+            });
+        }
+
         return res.status(500).json({
             success: false,
             message: 'Payment could not be started. Please try again.'
