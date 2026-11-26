@@ -1,9 +1,6 @@
 require('dotenv').config();
 
 const express = require('express');
-
-app.set("trust proxy", 1);   // <-- here
-
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 
@@ -23,7 +20,7 @@ app.use(cors({
     origin(origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
             return callback(null, true);
-        }
+        }   
 
         return callback(new Error('Origin not allowed by CORS'));
     },
